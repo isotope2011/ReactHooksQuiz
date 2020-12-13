@@ -1,0 +1,121 @@
+/* 
+ ** concept
+    Screens UI
+    // UI component Repo thats flexible to create any combination of user driven Q/A or progressive screens or views
+
+
+    all the developer to spin up a repo with re-usable react-hook driven components
+    The standard assets
+    global component wrapper 
+    - tracks the application state
+    - global provider of state driven data and trigger actions
+    - common error handling concept
+    - common timeout solution
+    - common WCAG solutions (focus trap)
+    - common API base endpoint (xpi)
+    - register services need for current views
+    - load configs and settings
+    - track current, prev, and next view
+    View component
+    - render view content
+    - subscribe to registered service needed to get/set data
+    - render view form driven content
+    - get prefill data
+    - save and continue
+    - trigger view change 
+    Utils
+    - react form solution
+    - configuration driven form creation
+    - validation schema
+    - date/time formatting
+    - currency formatting
+
+    MicroServices Strategy
+
+    Resource Types
+    - auth
+    - user info
+    - common data, settings, etc.
+    - state tracking data
+    - view data
+    Service Types
+    - UI introduces dependency between services
+    - UI configures the response types needed, endpoints and structure
+    - ex. request { url, method, body, description }, response { callback, errors }
+    - useRequest to make the customizable request
+    Events
+    - StateUpdated
+    - StepCompleted
+    - StepUpdated
+    - 
+
+    sample
+    const serviceConfig: {
+        BaseURL,
+        RequestTypes: {
+            GET: { url, method },
+            POST: { url, method, body }
+        },
+        Payload: {
+            ...
+        }
+    };
+
+    // App.js or AuthenticatedApp.js
+    return {
+        <GlobalScreensProvider {...serviceConfig}>
+            <TransitionalHeader {...props} />
+            <ViewManager />
+            <Footer {...props} />
+        </GlobalScreensProvider>
+    }
+
+    // TransitionalHeader
+    // import getServiceData
+    // import reducer state and actions
+    // import global context
+    props => {
+        const { state, actions } = useContext(globalContext);
+        const [data, setData] = useState(props.defaultHeader);
+        useEffect(() => {
+            getServiceData().then(res => {
+                const { data, error, request };
+                updateStackTrace(request);
+                if (data) setData(data);
+                else throwError(error);
+            });
+            return () => true;
+        }, [setData]);
+
+        if (data) {
+            return {
+                // headerb
+
+                {data.type === 'standalone') ? (
+                    <StandaloneHeader {...data} />
+                ) : (
+                    <TravHeader {...data} />
+                )
+
+                }
+            }
+        }
+    };
+
+
+    // register service
+    register.('audit-group-api', {
+        GET: { url, options },
+        POST: { url, options };
+    })
+
+ 
+    var config = {
+        method: 'get',
+        url: 'http://localhost:3001/api/heartbeat',
+        headers: { 
+            'correlationId': '87654321-1234-0123-b123-123456789ABC'
+        }
+    };
+*/
+

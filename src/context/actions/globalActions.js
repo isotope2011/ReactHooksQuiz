@@ -1,3 +1,19 @@
+import axios from "axios";
+
+const postQuiz = (data) => axios.post("/api/quiz", data).then((res) => {
+  console.log(res.data);
+  return res.data;
+});
+
+// thunk action example
+// const postQuizData = data => {
+//   return (dispatch) => {
+//     return dispatch(postQuiz(data)).then(() => {
+//       return Promise.resolve();
+//     })
+//   }
+// }
+
 export const globalActions = ({ dispatch }) => {
   return {
     throwError: (error) => {
@@ -11,6 +27,15 @@ export const globalActions = ({ dispatch }) => {
     },
     updateCurrentIndex: (index) => {
       dispatch({ type: "UPDATE_CURRENT_INDEX", index });
-    }
+    },
+    asyncPostQuizData: async (data) => {
+      await postQuiz(data).then((res) => {
+        console.log('async', res);
+        dispatch({ type: 'POST_DATA_SUCCESS', ...res });
+      })
+    },
+    resetStatus: () => {
+      dispatch({ type: 'POST_DATA_SUCCESS', status: null });
+    },
   }; 
 };

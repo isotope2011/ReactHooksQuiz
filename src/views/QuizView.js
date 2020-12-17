@@ -11,7 +11,7 @@ import { StoreContext } from "../context/store/storeContext";
 
 export default () => {
   const { state, actions } = useContext(StoreContext);
-  const { globalStates: { data, index } } = state;
+  const { globalStates: { data, index, status } } = state;
   const { globalActions, viewActions } = actions;
   const isRequired = { required: true };
   
@@ -28,17 +28,25 @@ export default () => {
       viewActions.updateView("Summary");
     }
 
-    setQuiz(data[index]);
-    fieldRef.current.disabled = false;
-    toggleButton(false);
-    setStatus(null);
-  }, [index]);
-
-  const onSubmit = useCallback(
-    handleSubmit(({ correct }) => {
+    if (status === 'success') {
       fieldRef.current.disabled = true;
       toggleButton(true);
+    } else {
+      setQuiz(data[index]);
+      fieldRef.current.disabled = false;
+      toggleButton(false);
+      setStatus(null);
+    }
+
+  }, [index, status]);
+
+  const onSubmit = useCallback(
+    handleSubmit(async ({ correct }) => {
+      const answer = quizData.option[correct - 1];
+      globalActions.asyncPostQuizData({ answer });
+      
       setStatus(quizData.correct === parseInt(correct));
+      console.log('on submit', answer);
     })
   );
 
@@ -50,6 +58,7 @@ export default () => {
   const onClick = useCallback(() => {
     setQuiz(null);
     globalActions.updateCurrentIndex(index + 1);
+    globalActions.resetStatus();
   });
 
   return (
@@ -57,7 +66,7 @@ export default () => {
       <h2>Which Word is Related?</h2>
       <div>
         <ul>
-          {_get(quizData, 'quiz', []).map((word, idx) => <li key={idx}>{word}</li>)}
+          {_get(quizData, 'quiz', []).map((word, idx) => <li key={`word_${idx}`}>{word}</li>)}
         </ul>
       </div>
       <form>
@@ -65,10 +74,9 @@ export default () => {
           {_get(quizData, 'option', []).map((word, idx) => {
               const ans = idx + 1;
               return (
-                <>
+                <React.Fragment key={`answer_${idx}`}>
                   <input
                     {...{
-                      key: idx,
                       type: "radio",
                       id: ans,
                       name: "correct",
@@ -80,7 +88,7 @@ export default () => {
                   <label htmlFor={ans}>{word}</label>
                   <br />
                   <br />
-                </>
+                </React.Fragment>
               );
             })}
         </fieldset>

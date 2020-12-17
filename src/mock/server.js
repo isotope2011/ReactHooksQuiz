@@ -7,12 +7,25 @@ export default function ({ environment = "development" } = {}) {
     environment,
     routes() {
 
-      this.get("/api/words", (_schema, req) => {
+      this.get("/api/words", () => {
         return sampleData;
       });
 
-      this.get("/api/quiz", (_schema, req) => {
+      this.get("/api/quiz", () => {
         return quizData;
+      });
+
+      this.post("/api/quiz", (schema, req) => {
+        const data = JSON.stringify(req.requestBody);
+        console.log('post body data', data);
+        debugger;
+
+        return { status: 'success' };
+      });
+
+      this.get("/api/quiz/:id", (_schema, req) => {
+        let id = req.params.id;
+        console.log('dynamic segment id', id); 
       });
 
       // this.passthrough();

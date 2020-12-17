@@ -3,9 +3,10 @@ export const globalStates = {
   index: 0,
   debugData: null,
   error: null,
+  status: null
 };
 
-export const globalReducer = (state, { type, data, error, debugData, index }) => {
+export const globalReducer = (state, { type, data, error, debugData, index, status }) => {
   switch (type) {
     case "THROW_ERROR":
       return {
@@ -27,6 +28,12 @@ export const globalReducer = (state, { type, data, error, debugData, index }) =>
         ...state,
         index,
       };
+    case "POST_DATA_SUCCESS":
+      console.log('reducer', status)
+      return {
+        ...state,
+        status
+      }
     default:
       return state;
   }

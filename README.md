@@ -268,3 +268,61 @@ const StoreProvider = ({ children }) => {
 export { StoreContext, StoreProvider };
 
 `````
+
+### React Middleware - Redux-like middleware solution
+
+Created redux like solution to apply middlewares to context api's dispatch method.
+
+Using "ramda" npm package to compose middleware functions to trigger each middleware added in the chain.
+Passing to each an api of state and dispatch.
+
+```
+const applyMiddlewares = (middlewares = []) => ({ state, dispatch }) => {
+  const api = { state, dispatch };
+  const chain = middlewares.map((middleware) => middleware(api));
+
+  return compose(...chain)(dispatch);
+};
+```
+
+**React middlewares**
+
+- add on used to customize the dispatch function
+- between dispatching an action and prior to  meeting a reducer
+
+**Middleware Examples**
+
+logger middleware - wrap dispatch with console logs beforea and after
+```
+const logger = ({ state }) => {
+  return (next) => (action) => {
+    console.group('logger');
+    console.log('before dispatch', action);
+    const nextDispatch = next(action);
+    console.log('after dispatch', state);
+    console.groupEnd();
+    return nextDispatch;
+  };
+};
+```
+
+reactThunk - allows for both async and sync actions to dispatch function
+
+- returns a method that takes action as a param
+- dispatches an action, should return state
+```
+const reactThunk = ({ dispatch, state }) => {
+  return (next) => (action) => {
+    console.log("thunk", typeof action, action);
+    return typeof action === "function"
+      ? action(dispatch, state)
+      : next(action);
+  };
+};
+```
+
+
+## Using Mirage JS for Mocking APIs and Testing
+
+**Resources**
+https://miragejs.com/tutorial/intro/

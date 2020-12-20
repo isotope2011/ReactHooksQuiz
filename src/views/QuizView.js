@@ -14,7 +14,7 @@ const WRONG = 'wrong';
 
 export default () => {
   const { state, actions } = useContext(StoreContext);
-  const { globalStates: { data, index, status, score } } = state;
+  const { globalStates: { data, index, status } } = state;
   const { globalActions, viewActions } = actions;
   const isRequired = { required: true };
   const total = data.length;

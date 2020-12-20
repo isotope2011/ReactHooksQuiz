@@ -9,11 +9,15 @@ import _get from 'lodash/get';
 import { useForm } from "react-hook-form";
 import { StoreContext } from "../context/store/storeContext";
 
+const CORRECT = 'correct';
+const WRONG = 'wrong';
+
 export default () => {
   const { state, actions } = useContext(StoreContext);
-  const { globalStates: { data, index, status } } = state;
+  const { globalStates: { data, index, status, score } } = state;
   const { globalActions, viewActions } = actions;
   const isRequired = { required: true };
+  const total = data.length;
   
   const { register, handleSubmit, errors } = useForm();
   const [quizData, setQuiz] = useState(null);
@@ -24,7 +28,7 @@ export default () => {
   useEffect(() => {
     console.log("isFinished>", index, data.length-1, data[index]);
     // stop and goto End View
-    if (index > data.length - 1) {
+    if (index > total - 1) {
       viewActions.updateView("Summary");
     }
 
@@ -32,9 +36,10 @@ export default () => {
       fieldRef.current.disabled = true;
       toggleButton(true);
     } else {
-      setQuiz(data[index]);
       fieldRef.current.disabled = false;
       toggleButton(false);
+      
+      setQuiz(data[index]);
       setStatus(null);
     }
 
@@ -43,10 +48,13 @@ export default () => {
   const onSubmit = useCallback(
     handleSubmit(async ({ correct }) => {
       const answer = quizData.option[correct - 1];
-      globalActions.asyncPostQuizData({ answer });
+      const ansType = quizData.correct === parseInt(correct) ? CORRECT : WRONG;
       
-      setStatus(quizData.correct === parseInt(correct));
-      console.log('on submit', answer);
+      globalActions.asyncPostQuizData({ answer, ansType });
+
+      setStatus(ansType);
+      
+      console.log('on submit', answer, ansType);
     })
   );
 
@@ -56,14 +64,17 @@ export default () => {
   });
 
   const onClick = useCallback(() => {
-    setQuiz(null);
     globalActions.updateCurrentIndex(index + 1);
-    globalActions.resetStatus();
+    globalActions.updateStatus(null);
+
+    setQuiz(null);
+    setStatus(null);
   });
 
   return (
     <>
-      <h2>Which Word is Related?</h2>
+      <h2>Question {index + 1} of {total}</h2>
+      <strong>Which Word is Related?</strong>
       <div>
         <ul>
           {_get(quizData, 'quiz', []).map((word, idx) => <li key={`word_${idx}`}>{word}</li>)}
@@ -102,7 +113,7 @@ export default () => {
       </form>
       {answerStatus !== null && (
         <div>
-          {answerStatus ? (
+          {answerStatus === CORRECT ? (
             <strong style={{ color: "green" }}>Correct!!</strong>
           ) : (
             <strong style={{ color: "red" }}>Wrong...</strong>

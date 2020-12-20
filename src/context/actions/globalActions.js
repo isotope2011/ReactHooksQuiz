@@ -1,9 +1,6 @@
 import axios from "axios";
 
-const postQuiz = (data) => axios.post("/api/quiz", data).then((res) => {
-  console.log(res.data);
-  return res.data;
-});
+const postQuiz = (data) => axios.post("/api/quiz", data).then((res) => res.data);
 
 // thunk action example
 // const postQuizData = data => {
@@ -14,7 +11,7 @@ const postQuiz = (data) => axios.post("/api/quiz", data).then((res) => {
 //   }
 // }
 
-export const globalActions = ({ dispatch }) => {
+export const globalActions = ({ dispatch, state: { globalStates: state } }) => {
   return {
     throwError: (error) => {
       dispatch({ type: "THROW_ERROR", error });
@@ -29,13 +26,17 @@ export const globalActions = ({ dispatch }) => {
       dispatch({ type: "UPDATE_CURRENT_INDEX", index });
     },
     asyncPostQuizData: async (data) => {
-      await postQuiz(data).then((res) => {
-        console.log('async', res);
-        dispatch({ type: 'POST_DATA_SUCCESS', ...res });
-      })
+      await postQuiz(data).then(({ status, ansType }) => {
+        const score = { [ansType]: state.score[ansType] + 1 };
+        dispatch({
+          type: 'UPDATE_SCORE',
+          score: { ...state.score, ...score }
+        });
+        dispatch({ type: 'UPDATE_STATUS', status });
+      });
     },
-    resetStatus: () => {
-      dispatch({ type: 'POST_DATA_SUCCESS', status: null });
+    updateStatus: (status) => {
+      dispatch({ type: 'UPDATE_STATUS', status });
     },
   }; 
 };

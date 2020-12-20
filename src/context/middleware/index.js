@@ -4,7 +4,7 @@ import { compose } from "ramda";
 // - between dispatching an action and prior to  meeting a reducer
 
 // middlewares
-const logger = ({ state }) => {
+function logger({ state }) {
   return (next) => (action) => {
     console.group('logger');
     console.log('before dispatch', action);
@@ -13,25 +13,27 @@ const logger = ({ state }) => {
     console.groupEnd();
     return nextDispatch;
   };
-};
+}
 
 // allows for both async and sync actions to dispatch function
 // returns a method that takes action as a param
 // dispatches an action, should return state
-const reactThunk = ({ dispatch, state }) => {
+function reactThunk({ dispatch, state }) {
   return (next) => (action) => {
     console.log("thunk", typeof action, action);
     return typeof action === "function"
       ? action(dispatch, state)
       : next(action);
   };
-};
+}
 
-const applyMiddlewares = (middlewares = []) => ({ state, dispatch }) => {
-  const api = { state, dispatch };
-  const chain = middlewares.map((middleware) => middleware(api));
+function applyMiddlewares(middlewares = []) {
+  return ({ state, dispatch }) => {
+    const api = { state, dispatch };
+    const chain = middlewares.map((middleware) => middleware(api));
 
-  return compose(...chain)(dispatch);
-};
+    return compose(...chain)(dispatch);
+  };
+}
 
 export { applyMiddlewares, reactThunk, logger };

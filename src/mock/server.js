@@ -6,7 +6,6 @@ export default function ({ environment = "development" } = {}) {
   return createServer({
     environment,
     routes() {
-
       this.get("/api/words", () => {
         return sampleData;
       });
@@ -15,20 +14,19 @@ export default function ({ environment = "development" } = {}) {
         return quizData;
       });
 
-      this.post("/api/quiz", (schema, req) => {
-        const data = JSON.stringify(req.requestBody);
-        console.log('post body data', data);
-        debugger;
-
-        return { status: 'success' };
-      });
-
       this.get("/api/quiz/:id", (_schema, req) => {
         let id = req.params.id;
-        console.log('dynamic segment id', id); 
+        console.log("dynamic segment id", id, quizData[id]);
+        return quizData[id];
       });
 
-      // this.passthrough();
+      this.post("/api/quiz", (schema, req) => {
+        const { answer, ansType } = JSON.parse(req.requestBody) || {};
+        console.log("post body data", answer, ansType);
+        return { status: "success", answer, ansType };
+      });
+
+      this.passthrough();
     },
   });
 }

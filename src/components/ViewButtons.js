@@ -11,6 +11,7 @@ export default () => {
     <div>
       <hr />
       <button {...{ onClick, value: "Welcome" }}>Welcome</button>
+      <button {...{ onClick, value: "Summary" }}>Summary</button>
       <button {...{ onClick, value: "HelloWorld" }}>Hello World</button>
       <button {...{ onClick, value: "Counter" }}>Counter</button>
       <button {...{ onClick, value: "Form" }}>React Hook Form</button>

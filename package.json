@@ -19,12 +19,19 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest -c jest.config.js --watch",
+    "test:coverage": "jest",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react",
+      "@babel/preset-env"
+    ]
   },
   "browserslist": [
     ">0.2%",
@@ -33,7 +40,17 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.6.0",
+    "babel-jest": "^26.6.3",
+    "cross-env": "^7.0.3",
+    "gh-pages": "^2.0.1",
+    "jest": "26.6.0",
     "miragejs": "^0.1.41",
-    "gh-pages": "^2.0.1"
+    "msw": "^0.24.2",
+    "snapshot-diff": "^0.8.1"
   }
 }

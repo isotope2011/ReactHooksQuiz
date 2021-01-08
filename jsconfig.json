@@ -4,8 +4,9 @@
       "target": "es6"
     },
     "paths": {
-      "components/*": ["./components/*"],
-      "context/*": ["./context/*"],
-      "views/*": ["./views/*"],
+      "components/*": ["./src/components/*"],
+      "context/*": ["./src/context/*"],
+      "views/*": ["./src/views/*"],
+      "test-utils": ["./src/test-utils"],
     }
   }

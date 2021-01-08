@@ -18,7 +18,7 @@ export default () => {
       <h2>Word Quiz</h2>
       <strong>Take this word quiz for fun!</strong>
       <p>Good Luck!</p>
-      <button onClick={onClick} value="Quiz">{label}</button>
+      <button data-testid="continue" onClick={onClick} value="Quiz">{label}</button>
     </>
   );
 };

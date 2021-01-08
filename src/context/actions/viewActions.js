@@ -4,8 +4,6 @@ export const viewActions = ({ dispatch }) => {
             dispatch({ type: "UPDATE_VIEW", view });
             dispatch({ type: "UPDATE_PAGE_VIEW", view });
         },
-        resetView: () => {
-            dispatch({ type: "RESET_VIEW" });
-        },
+        resetView: () => dispatch({ type: "RESET_VIEW" }),
     }
 }

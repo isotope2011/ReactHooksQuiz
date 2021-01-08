@@ -5,12 +5,12 @@ import { applyMiddlewares, logger, reactThunk } from "../middleware";
 
 // TODO: preload state here from storage or fetch request
 
-const StoreContext = createContext(initialState);
+const StoreContext = createContext();
 
 const StoreProvider = ({ children }) => {
   const [state, dispatchBase] = useReducer(reducer, initialState);
-  const middleWares = applyMiddlewares([logger, reactThunk]);
-  const dispatch = useCallback(middleWares({ dispatch: dispatchBase, state }), []);
+  const dispatcher = applyMiddlewares([logger, reactThunk]);
+  const dispatch = useCallback(dispatcher({ dispatch: dispatchBase, state }), []);
   const actions = useActions(state, dispatch);
 
   return (

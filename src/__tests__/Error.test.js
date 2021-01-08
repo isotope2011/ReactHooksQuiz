@@ -7,14 +7,12 @@ import Error from '../views/Error';
 describe('Error View Component', () => {
     test('Display Error Message', () => {
         const { getByText } = render(<Error {...{ errors: 'Error Message' }} />);
-        // screen.debug();
         expect(getByText('Error Message')).toMatchSnapshot();
     })
 
     test('Test using asFragment for first render check', () => {
         const { asFragment } = render(<Error {...{ errors: 'Error Message' }} />);
         const firstRender = asFragment();
-        // screen.debug();
         // expect(firstRender).toMatchDiffSnapshot(asFragment());
         // using snapshotDiff
         expect(
@@ -24,11 +22,7 @@ describe('Error View Component', () => {
 
     test('Show Something went wrong... as default', () => {
         render(<Error />);
-        // screen.debug();
         expect(screen.getByText('Something went wrong...')).toMatchSnapshot();
     })
-})
+});
 
-/*
-
-*/ 

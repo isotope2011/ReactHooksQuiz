@@ -1,21 +1,12 @@
-export const counterActions = (props) => {
+export const counterActions = ({ dispatch }) => {
   return {
-    increment:  () => {
-      props.dispatch({ type: "INCREMENT" });
-    },
-    decrement: () => {
-      props.dispatch({ type: "DECREMENT" });
-    },
-    reset: () => {
-      props.dispatch({ type: "RESET" });
-    },
-    setValue: (data) => {
-      // props.dispatch({ type: "SET_VALUE", data });
-      externSetValue(props, data);
-    }
+    increment:  () => dispatch({ type: "INCREMENT" }),
+    decrement: () => dispatch({ type: "DECREMENT" }),
+    reset: () => dispatch({ type: "RESET" }),
+    setValue: count => externSetValue({ dispatch, count })
   }
 }
 
-function externSetValue(props,data) {
-  props.dispatch({ type: "SET_VALUE", data});
+function externSetValue({ dispatch, count }) {
+  dispatch({ type: "SET_VALUE", count });
 }

@@ -2,8 +2,8 @@ export const counterStates = {
     count: 0
   }
   
-  export const counterReducer = (state, action) => {
-    switch (action.type) {
+  export const counterReducer = (state, { type, count }) => {
+    switch (type) {
       case "INCREMENT":
         return {
           ...state,
@@ -15,14 +15,11 @@ export const counterStates = {
           count: state.count - 1
         };
       case "RESET":
-        return {
-          ...state,
-          count: 0
-        };
+        return counterStates;
       case "SET_VALUE":
         return {
           ...state,
-          count: action.data
+          count
         };
       default:
         return state;

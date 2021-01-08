@@ -90,6 +90,7 @@ const FormBuilder = ({ config, register, errors }) => {
           <br />
         </>
       )}
+      <br />
 
       <label for="email">Email: </label>
       <input name="email" type="email" ref={register} />
@@ -100,6 +101,7 @@ const FormBuilder = ({ config, register, errors }) => {
           <br />
         </>
       )}
+      <br />
 
       <label for="gender">Gender: </label>
       <select name="gender" ref={register}>
@@ -118,6 +120,7 @@ const FormBuilder = ({ config, register, errors }) => {
           <br />
         </>
       )}
+      <br />
 
       <label for="isChecked">Checkbox: </label>
       <input id="isChecked" name="checkbox" type="checkbox" ref={register} />
@@ -128,8 +131,8 @@ const FormBuilder = ({ config, register, errors }) => {
           <br />
         </>
       )}
-
       <br />
+      
       <fieldset>
         <legend>Is it True?</legend>
         <input
@@ -140,7 +143,7 @@ const FormBuilder = ({ config, register, errors }) => {
           ref={register}
         />
         <label for="isTrue">True</label>
-        <br />
+        <br /><br />
         <input
           type="radio"
           id="isFalse"
@@ -157,6 +160,7 @@ const FormBuilder = ({ config, register, errors }) => {
           <br />
         </>
       )}
+      <br />
     </div>
   );
 };

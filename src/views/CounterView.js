@@ -8,19 +8,21 @@ export default () => {
   return (
     <div>
       <h2>Counter</h2>
-      <p>{state.counterStates.count}</p>
-      <button onClick={() => { actions.counterActions.increment(); }}>
-        INCREMENT
-      </button>
-      <button onClick={() => { actions.counterActions.decrement(); }}>
-        DECREMENT
-      </button>
-      <button onClick={() => { actions.counterActions.reset(); }}>
-        RESET
-      </button>
-      <button onClick={() => { actions.counterActions.setValue(valueRandom()); }}>
-        VALUE RANDOM
-      </button>
+      <p data-testid="counter">{state.counterStates.count}</p>
+      <div>
+        <button data-testid="increment" onClick={() => { actions.counterActions.increment(); }}>
+          INCREMENT
+        </button>
+        <button data-testid="decrement" onClick={() => { actions.counterActions.decrement(); }}>
+          DECREMENT
+        </button>
+        <button data-testid="reset" onClick={() => { actions.counterActions.reset(); }}>
+          RESET
+        </button>
+        <button data-testid="random" onClick={() => { actions.counterActions.setValue(valueRandom()); }}>
+          VALUE RANDOM
+        </button>
+      </div>
     </div>
   );
 };

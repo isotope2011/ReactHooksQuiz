@@ -33,9 +33,11 @@ export default () => {
 
   return (
     <div>
-      {`Current View: - ${JSON.stringify(viewStates.view)}`}
+      <h2>
+        {`Current View: - ${JSON.stringify(viewStates.view)}`}
+      </h2>
       <ViewButtons />
-      {PageView && <PageView />}
+      {PageView && <PageView data-testid="pageview" />}
       {errors && <Error {...{ errors }} />}
     </div>
   );

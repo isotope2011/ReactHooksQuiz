@@ -10,13 +10,13 @@ export default () => {
   return (
     <div>
       <hr />
-      <button {...{ onClick, value: "Welcome" }}>Welcome</button>
-      <button {...{ onClick, value: "Summary" }}>Summary</button>
-      <button {...{ onClick, value: "HelloWorld" }}>Hello World</button>
-      <button {...{ onClick, value: "Counter" }}>Counter</button>
-      <button {...{ onClick, value: "Form" }}>React Hook Form</button>
-      <button {...{ onClick, value: "YUPForm" }}>YUP Form</button>
-      <button {...{ onClick, value: "ConfigForm" }}>Config Form</button>
+      <button {...{ onClick, value: "Welcome", "data-testid": "Welcome-view" }}>Welcome</button>
+      <button {...{ onClick, value: "Summary", "data-testid": "Summary-view" }}>Summary</button>
+      <button {...{ onClick, value: "HelloWorld", "data-testid": "HelloWorld-view" }}>Hello World</button>
+      <button {...{ onClick, value: "Counter", "data-testid": "Counter-view" }}>Counter</button>
+      <button {...{ onClick, value: "Form", "data-testid": "Form-view" }}>React Hook Form</button>
+      <button {...{ onClick, value: "YUPForm", "data-testid": "YUPForm-view" }}>YUP Form</button>
+      <button {...{ onClick, value: "ConfigForm", "data-testid": "ConfigForm-view" }}>Config Form</button>
       <hr />
     </div>
   );

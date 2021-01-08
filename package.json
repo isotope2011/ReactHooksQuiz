@@ -3,35 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.10",
     "@hookform/resolvers": "^1.0.1",
+    "@testing-library/react-hooks": "^3.7.0",
     "axios": "^0.21.0",
+    "babel-jest": "26.6.0",
     "lodash": "^4.17.20",
     "ramda": "^0.27.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
     "react-hook-form": "^6.11.4",
     "react-scripts": "2.1.8",
     "yup": "^0.30.0"
   },
-  "main": "build/index.js",
-  "module": "build/index.js",
   "homepage": "/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest -c jest.config.js --watch",
-    "test:coverage": "jest",
+    "test": "jest -c jest.config.js --silent",
+    "test:debug": "jest -c jest.config.js --watch",
+    "test:coverage": "npm test -- --coverage --colors --reporters=default --watchAll=false",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-react",
-      "@babel/preset-env"
-    ]
   },
   "browserslist": [
     ">0.2%",
@@ -41,16 +38,19 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.12.11",
-    "@testing-library/jest-dom": "^5.11.6",
+    "@babel/preset-react": "^7.12.10",
+    "@babel/runtime": "^7.12.5",
+    "@testing-library/jest-dom": "^5.11.8",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.6.0",
-    "babel-jest": "^26.6.3",
     "cross-env": "^7.0.3",
     "gh-pages": "^2.0.1",
     "jest": "26.6.0",
     "miragejs": "^0.1.41",
     "msw": "^0.24.2",
+    "react-test-renderer": "16.8.6",
     "snapshot-diff": "^0.8.1"
   }
 }

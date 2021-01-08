@@ -39,6 +39,7 @@ export default () => {
             <br />
           </>
         )}
+        <br />
 
         <label for="email">Email: </label>
         <input name="email" type="email" ref={register} />
@@ -49,6 +50,7 @@ export default () => {
             <br />
           </>
         )}
+        <br />
 
         <label for="gender">Gender: </label>
         <select name="gender" ref={register}>
@@ -67,6 +69,7 @@ export default () => {
             <br />
           </>
         )}
+        <br />
 
         <label for="isChecked">Checkbox: </label>
         <input id="isChecked" name="checkbox" type="checkbox" ref={register} />
@@ -77,13 +80,13 @@ export default () => {
             <br />
           </>
         )}
-
         <br />
+
         <fieldset>
           <legend>Is it True?</legend>
           <input type="radio" id="isTrue" name="radio" value="isTrue" ref={register} />
           <label for="isTrue">True</label>
-          <br />
+          <br /><br />
           <input type="radio" id="isFalse" name="radio" value="isFalse" ref={register} />
           <label for="isFalse">False</label>
           <br />
@@ -94,6 +97,7 @@ export default () => {
             <br />
           </>
         )}
+        <br />
 
         <button type="submit">Submit</button>
       </form>

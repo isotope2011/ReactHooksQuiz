@@ -31,7 +31,6 @@ function applyMiddlewares(middlewares = []) {
   return ({ state, dispatch }) => {
     const api = { state, dispatch };
     const chain = middlewares.map((middleware) => middleware(api));
-
     return compose(...chain)(dispatch);
   };
 }

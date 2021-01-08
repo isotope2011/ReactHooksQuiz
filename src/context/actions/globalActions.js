@@ -13,19 +13,11 @@ const postQuiz = (data) => axios.post("/api/quiz", data).then((res) => res.data)
 
 export const globalActions = ({ dispatch, state: { globalStates: state } }) => {
   return {
-    throwError: (error) => {
-      dispatch({ type: "THROW_ERROR", error });
-    },
-    updateData: (data) => {
-      dispatch({ type: "UPDATE_DATA", data });
-    },
-    updateDebugData: (debugData) => {
-      dispatch({ type: "UPDATE_DEBUG_DATA", debugData });
-    },
-    updateCurrentIndex: (index) => {
-      dispatch({ type: "UPDATE_CURRENT_INDEX", index });
-    },
-    asyncPostQuizData: async (data) => {
+    throwError: error => dispatch({ type: "THROW_ERROR", error }),
+    updateData: data => dispatch({ type: "UPDATE_DATA", data }),
+    updateDebugData: debugData => dispatch({ type: "UPDATE_DEBUG_DATA", debugData }),
+    updateCurrentIndex: index => dispatch({ type: "UPDATE_CURRENT_INDEX", index }),
+    asyncPostQuizData: async data => {
       await postQuiz(data).then(({ status, ansType }) => {
         const score = { [ansType]: state.score[ansType] + 1 };
         dispatch({
@@ -35,8 +27,6 @@ export const globalActions = ({ dispatch, state: { globalStates: state } }) => {
         dispatch({ type: 'UPDATE_STATUS', status });
       });
     },
-    updateStatus: (status) => {
-      dispatch({ type: 'UPDATE_STATUS', status });
-    },
+    updateStatus: status => dispatch({ type: 'UPDATE_STATUS', status }),
   }; 
 };

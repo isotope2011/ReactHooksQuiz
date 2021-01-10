@@ -9,32 +9,28 @@ const GET = "GET";
 
 export default () => {
   const { state, actions } = useContext(StoreContext);
-  const [fetched, setFetched] = useState(false);
-  const { doRequest, errors } = useRequest({
+  const [errors, setError] = useState(null);
+  const PageView = state.viewStates.pageView;
+  const doRequest = useRequest({
     url: "/api/quiz",
     method:  GET,
   });
-  const { viewStates } = state;
-  const { viewActions, globalActions } = actions;
-  const PageView = viewStates.pageView;
-
+  
   useEffect(() => {
-    if (!fetched) {
-      doRequest().then((data) => {
-        setFetched(true);
-        if (data) {
-          globalActions.updateData(data.quizlist);
-          viewActions.updateView(DEFAULT_VIEW);
-          
-        }
-      });
-    }
-  });
-
+    doRequest().then(({ data, error }) => {
+      if (data) {
+        actions.globalActions.updateData(data.quizlist);
+        actions.viewActions.updateView(DEFAULT_VIEW);   
+      } else {
+        setError(error.message);
+      }
+    })
+  }, []);
+  
   return (
     <div>
       <h2>
-        {`Current View: - ${JSON.stringify(viewStates.view)}`}
+        {`Current View: - ${JSON.stringify(state.viewStates.view)}`}
       </h2>
       <ViewButtons />
       {PageView && <PageView data-testid="pageview" />}

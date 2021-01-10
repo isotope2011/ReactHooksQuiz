@@ -1,32 +1,21 @@
-# Boilerplate React Hooks
-This is a boilerplate created whit create-react-app to use React Hooks and Context API like Redux Architecture
+# React Hook Quiz Boilerplate
+This is a boilerplate created with 'create-react-app' to use React Hooks and Context API for State Management.
 
-## Demo
-Functional demo
-[Go demo](https://josezunigadyehs.github.io/boilerplate-react-hooks/)<br/>
+## Purpose
+Due to the new features of ReactJS, it is possible to create an architecture and state management without Redux, and without adding any extra libraries (Native Solutions). This can be accomplished using the Context API and React Hooks.
 
-## Why?
-Due to the new features of ReactJS, it is possible to create an architecture and state management as in Redux, but without adding any extra libraries.
+## My Resources
 
-This is posible working with the new ReactJS Context and Hooks APIs.
-
-## Inspiration
-I'd inspired by two articles of Medium 
-
-1. [State Management with React Hooks and Context API in 10 lines of code!](https://medium.com/simply/state-management-with-react-hooks-and-context-api-at-10-lines-of-code-baf6be8302c)
-2. [Replace Redux state with React Hooks and Context](https://itnext.io/replace-redux-state-with-react-hooks-and-context-7906e0fd5521)
-
-
-## Features
-_React.js_ - **React >16.8.0**💎
+1. [Boilerplate React Hooks](https://github.com/JoseZunigaDyehs/boilerplate-react-hooks)
+2. [Functional demo](https://josezunigadyehs.github.io/boilerplate-react-hooks/)<br/>
+3. [State Management with React Hooks and Context API in 10 lines of code!](https://medium.com/simply/state-management-with-react-hooks-and-context-api-at-10-lines-of-code-baf6be8302c)
+4. [Replace Redux state with React Hooks and Context](https://itnext.io/replace-redux-state-with-react-hooks-and-context-7906e0fd5521)
 
 ## Quick start
 
-1. Clone this repo using `git clone https://github.com/JoseZunigaDyehs/boilerplate-react-hooks.git`
+1. Clone this repo using `git clone https://github.com/isotope2011/ReactHooksQuiz.git`
 2. Run `yarn` or `npm install` to install dependencies.<br />
 3. Run `npm start` to see the example app at `http://localhost:3000`.
-
-Now you're ready build your React Application working with an architecture and store managment like Redux!
 
 ## Documentation
 
@@ -34,9 +23,16 @@ Now you're ready build your React Application working with an architecture and s
 
     ├── public                     
     ├── src                          
-    ├──── context
+    ├──── __tests__
+    ├────── __snapshots__
+    ├──── apis    
+    ├──── components   
+    ├────── index.js 
+    ├──── context    
     ├────── actions
     ├──────── generalActions.js
+    ├──────── index.js
+    ├────── middleware
     ├──────── index.js
     ├────── states
     ├──────── initialStates.js
@@ -45,14 +41,23 @@ Now you're ready build your React Application working with an architecture and s
     ├──────── reducer.js
     ├────── store
     ├──────── storeContext.js
+    ├──── hooks
+    ├──── mock
+    ├────── data
+    ├──── utils
+    ├──── views                
     ├──── index.js
     ├──── App.js
     ├──── serviceWorker.js
-    ├── package.json            
+    ├── babel.config.json   
+    ├── jest.config.json   
+    ├── jsconfig.json       
+    ├── package.json   
     ├── .gitignore
+    ├── .env
     └── README.md
 
-### Index.js
+### index.js
 Render StoreProvider App Principal with a child function.
 
 `````
@@ -73,90 +78,103 @@ serviceWorker.unregister();
 
 `````
 
-### App.js
+### views/Main.js
 Principal function, it can use `{ state, actions }` as parameter using useContext method and passing the StoreContext Hook.
-It Have handle functions that dispatch functions to actions functions 
+It Have handle functions that dispatch functions to actions functions.
 
 `````
 
-import React, { useContext } from "react";
-import { StoreContext } from "./context/store/storeContext";
+import React, { useContext, useEffect, useState } from "react";
+import { StoreContext } from "../context/store/storeContext";
+import Error from "./Error";
+import useRequest from "../hooks/use-request";
 
-const App = () => {
+const DEFAULT_VIEW = 'Welcome';
+const GET = "GET";
+
+export default () => {
   const { state, actions } = useContext(StoreContext);
-  const valueRandom = () => {
-    return Math.round(Math.random() * (1000 - 1) + 1);
-  };
+  const [errors, setError] = useState(null);
+  const PageView = state.viewStates.pageView;
+  const doRequest = useRequest({
+    url: "/api/quiz",
+    method:  GET,
+  });
+  
+  useEffect(() => {
+    doRequest().then(({ data, error }) => {
+      if (data) {
+        actions.globalActions.updateData(data);
+        actions.viewActions.updateView(DEFAULT_VIEW);   
+      } else {
+        setError(error.message);
+      }
+    })
+  }, []);
+  
   return (
     <div>
-      <p>{state.generalStates.count}</p>
-      <button onClick={() => { actions.generalActions.increment(); }}>
-        INCREMENT
-      </button>
-      <button onClick={() => { actions.generalActions.decrement(); }}>
-        DECREMENT
-      </button>
-      <button onClick={() => { actions.generalActions.reset(); }}>
-        RESET
-      </button>
-      <button onClick={() => { actions.generalActions.setValue(valueRandom()); }}>
-        VALUE RANDOM
-      </button>
+      <h2>{`Current View: - ${JSON.stringify(state.viewStates.view)}`}</h2>
+      {PageView && <PageView data-testid="pageview" />}
+      {errors && <Error {...{ errors }} />}
     </div>
   );
 };
 
-export default App;
-
 `````
 
-## Context Architecture
-Here is the magic!
+## Context API Architecture
 
 ### ACTIONS
 
 ### actions/index.js
  Export object with functions for each separate action, that receives an object `{state,dispatch}`
- Return every actions 
- 
+ Return every actions.
+
 `````
-import { generalActions } from './generalActions'
+import { counterActions } from './counterActions';
+import { globalActions } from './globalActions';
+import { viewActions } from './viewActions'
 
 export const useActions = (state, dispatch) => {
   return {
-    generalActions: generalActions({state,dispatch}),
+    counterActions: counterActions({ state, dispatch }),
+    globalActions: globalActions({ state, dispatch }),
+    viewActions: viewActions({ state, dispatch })
   }
 };
 
 `````
 
-### actions/generalActions.js
+### actions/globalActions.js
 Export actions receiving an object `{ state, dispatch }` to access to state or dispatch the actions.
 
 You can externalize the functions for complex logic.
 
 `````
-export const generalActions = (props) => {
-  return {
-    increment:  () => {
-      props.dispatch({ type: "INCREMENT" });
-    },
-    decrement: () => {
-      props.dispatch({ type: "DECREMENT" });
-    },
-    reset: () => {
-      props.dispatch({ type: "RESET" });
-    },
-    setValue: (data) => {
-      // props.dispatch({ type: "SET_VALUE", data });
-      externSetValue(props,data);
-    }
-  }
-}
+import axios from "axios";
 
-function externSetValue(props,data) {
-  props.dispatch({ type: "SET_VALUE", data});
-}
+const postQuiz = (data) => axios.post("/api/quiz", data).then((res) => res.data);
+
+export const globalActions = ({ dispatch, state: { globalStates: state } }) => {
+  return {
+    throwError: error => dispatch({ type: "THROW_ERROR", error }),
+    updateData: data => dispatch({ type: "UPDATE_DATA", data }),
+    updateDebugData: debugData => dispatch({ type: "UPDATE_DEBUG_DATA", debugData }),
+    updateCurrentIndex: index => dispatch({ type: "UPDATE_CURRENT_INDEX", index }),
+    asyncPostQuizData: async data => {
+      await postQuiz(data).then(({ status, ansType }) => {
+        const score = { [ansType]: state.score[ansType] + 1 };
+        dispatch({
+          type: 'UPDATE_SCORE',
+          score: { ...state.score, ...score }
+        });
+        dispatch({ type: 'UPDATE_STATUS', status });
+      });
+    },
+    updateStatus: status => dispatch({ type: 'UPDATE_STATUS', status }),
+  }; 
+};
 
 `````
 
@@ -169,51 +187,78 @@ reducer function returns separate states, which is a separate reducer, who recei
 
 `````
 import { initialState } from "../state/initialStates";
-import { generalReducer } from './generalReducer'
+import { counterReducer } from "./counterReducer";
+import { globalReducer } from "./globalReducer";
+import { viewReducer } from "./viewReducer";
 
 const reducer = (state = initialState, action) => {
   return {
-    generalStates: generalReducer(state.generalStates,action)
-  }
+    counterStates: counterReducer(state.counterStates, action),
+    globalStates: globalReducer(state.globalStates, action),
+    viewStates: viewReducer(state.viewStates, action),
+  };
 };
 
 export { initialState, reducer };
 
 `````
 
-### reducers/generalReducer.js
+### reducers/globalReducer.js
 Define and export states and reducer
 `````
-export const generalStates = {
-  count: 0
-}
+export const globalStates = {
+  data: null,
+  index: 0,
+  debugData: null,
+  error: null,
+  score: {
+    correct: 0,
+    wrong: 0,
+  },
+  status: null,
+};
 
-export const generalReducer = (state, action) => {
-  switch (action.type) {
-    case "INCREMENT":
+export const globalReducer = (
+  state,
+  { type, data, error, debugData, index, status, score }
+) => {
+  switch (type) {
+    case "THROW_ERROR":
       return {
         ...state,
-        count: state.count + 1
+        error,
       };
-    case "DECREMENT":
+    case "UPDATE_DATA":
       return {
         ...state,
-        count: state.count - 1
+        data,
       };
-    case "RESET":
+    case "UPDATE_DEBUG_DATA":
       return {
         ...state,
-        count: 0
+        debugData,
       };
-    case "SET_VALUE":
+    case "UPDATE_CURRENT_INDEX":
       return {
         ...state,
-        count: action.data
+        index,
+      };
+    case "UPDATE_SCORE":
+      console.log("reducer", score);
+      return {
+        ...state,
+        score,
+      };
+    case "UPDATE_STATUS":
+      return {
+        ...state,
+        status,
       };
     default:
-      throw new Error("Unexpected action");
+      return state;
   }
 };
+
 
 `````
 
@@ -223,11 +268,16 @@ export const generalReducer = (state, action) => {
 Exports an object with all separate state from reducers
 
 `````
-import { generalStates } from '../reducers/generalReducer'
+import { counterStates } from '../reducers/counterReducer';
+import { globalStates } from '../reducers/globalReducer';
+import { viewStates } from '../reducers/viewReducer';
 
 export const initialState = {
-  generalStates
+  counterStates,
+  globalStates,
+  viewStates
 };
+
 
 `````
 
@@ -246,26 +296,30 @@ You can use all Hooks here like `useEffect`, in this case, to show the new state
 It's return a Provider that receive a value with `{ state, dispatch, actios }`, it's encapsulate a children function to render.
  
 `````
+import React, { createContext, useReducer, useCallback } from "react";
 import { initialState, reducer } from "../reducers/reducers";
 import { useActions } from "../actions";
-import React, { createContext, useReducer, useEffect } from "react";
+import { applyMiddlewares, logger, reactThunk } from "../middleware";
 
-const StoreContext = createContext(initialState);
+// TODO: preload state here from storage or fetch request
+
+const StoreContext = createContext();
+
 const StoreProvider = ({ children }) => {
-
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatchBase] = useReducer(reducer, initialState);
+  const dispatcher = applyMiddlewares([logger, reactThunk]);
+  const dispatch = useCallback(dispatcher({ dispatch: dispatchBase, state }), []);
   const actions = useActions(state, dispatch);
 
-  useEffect(() => console.log({ newState: state }), [state]);
-
   return (
-    <StoreContext.Provider value={{ state, dispatch, actions }}>
+    <StoreContext.Provider value={{ actions, dispatch, state }}>
       {children}
     </StoreContext.Provider>
   );
 };
 
 export { StoreContext, StoreProvider };
+
 
 `````
 
@@ -322,7 +376,42 @@ const reactThunk = ({ dispatch, state }) => {
 ```
 
 
-## Using Mirage JS for Mocking APIs and Testing
+### MOCK / TESTING
+
+## Using Mirage JS for Mocking APIs
 
 **Resources**
 https://miragejs.com/tutorial/intro/
+
+## React Testing Library for Testing
+
+React Testing Library helps to write maintainable tests for React components. React Testing Library is supported out of the box when using 'create-react-app' for projects.
+### \_\_tests\_\_
+
+Tests are configured to be ran from the **\_\_tests\_\_** directory.
+
+```
+describe('HelloWorld View Component', () => {
+    test('Show Hello World text', () => {
+        const { getByText } = render(<HelloWorld />);
+        expect(getByText('Hello World!!')).toMatchSnapshot();
+    })
+})
+```
+
+### \_\_snapshots\_\_
+
+Snapshots can be matched when using jest '.toMatchSnapshot'. Snapshots are added to the **\_\_snapshots\_\_** directory upon creation.
+
+This will snapshot only the difference between the first render, and the state of the DOM after the click event.
+
+[Checkout 'snapshot-diff' solution](https://github.com/jest-community/snapshot-diff)
+
+```
+// using snapshotDiff
+test('Test using asFragment for first render check', () => {
+    const { asFragment } = render(<Error {...{ errors: 'Error Message' }} />);
+    const firstRender = asFragment();
+    expect(snapshotDiff(firstRender, asFragment())).toMatchSnapshot();
+})
+```
